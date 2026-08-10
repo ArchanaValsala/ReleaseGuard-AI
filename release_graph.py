@@ -18,10 +18,6 @@ load_dotenv()
 
 openai_key = os.getenv("OPENAI_API_KEY")
 
-if not openai_key:
-    raise ValueError("OPENAI_API_KEY was not found in the .env file.")
-
-
 model = ChatOpenAI(
     api_key=openai_key,
     model="gpt-5-mini",
