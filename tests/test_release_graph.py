@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from release_graph import (
     route_release,
     handle_go,
@@ -7,8 +9,7 @@ from release_graph import (
     fetch_release_evidence,
     graph,
 )
-from unittest.mock import patch
-from release_graph import graph
+
 
 def test_route_go():
     state = {
@@ -39,13 +40,6 @@ def test_route_no_go():
 
     assert result == "no_go"
 
-from release_graph import (
-    route_release,
-    handle_go,
-    handle_go_with_conditions,
-    handle_no_go,
-)
-
 
 def test_handle_go():
     result = handle_go({})
@@ -64,6 +58,7 @@ def test_handle_no_go():
 
     assert result["action_type"] == "block_release"
 
+
 def test_evaluate_release():
     state = {
         "release_evidence": {
@@ -76,6 +71,7 @@ def test_evaluate_release():
     result = evaluate_release(state)
 
     assert result["decision"] == "GO WITH CONDITIONS"
+
 
 @patch("release_graph.get_open_issues")
 @patch("release_graph.simplify_issues")
@@ -90,6 +86,7 @@ def test_fetch_release_evidence(
     mock_get_open_issues,
 ):
     mock_get_open_issues.return_value = []
+
     mock_simplify_issues.return_value = []
 
     mock_count_issues_by_severity.return_value = {
@@ -119,7 +116,7 @@ def test_fetch_release_evidence(
     assert evidence["low_issues"] == 1
 
 
-@patch("release_graph.structured_model")
+@patch("release_graph.get_structured_model")
 @patch("release_graph.get_open_issues")
 @patch("release_graph.simplify_issues")
 @patch("release_graph.count_issues_by_severity")
@@ -131,7 +128,7 @@ def test_full_graph_go_with_conditions(
     mock_count_issues_by_severity,
     mock_simplify_issues,
     mock_get_open_issues,
-    mock_structured_model,
+    mock_get_structured_model,
 ):
     mock_get_open_issues.return_value = []
 
@@ -154,7 +151,7 @@ def test_full_graph_go_with_conditions(
         "branch": "main",
     }
 
-    mock_structured_model.invoke.return_value.model_dump.return_value = {
+    mock_get_structured_model.return_value.invoke.return_value.model_dump.return_value = {
         "summary": "Test summary",
         "risk_level": "Moderate",
         "recommended_action": "Test action",

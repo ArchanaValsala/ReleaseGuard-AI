@@ -16,12 +16,18 @@ from github_client import (
 
 load_dotenv()
 
-openai_key = os.getenv("OPENAI_API_KEY")
+def get_structured_model():
+    openai_key = os.getenv("OPENAI_API_KEY")
 
-model = ChatOpenAI(
-    api_key=openai_key,
-    model="gpt-5-mini",
-)
+    if not openai_key:
+        raise ValueError("OPENAI_API_KEY is required to generate the explanation.")
+
+    model = ChatOpenAI(
+        api_key=openai_key,
+        model="gpt-5-mini",
+    )
+
+    return model.with_structured_output(ReleaseExplanation)
 
 class ReleaseState(TypedDict):
     release_evidence: dict
@@ -70,7 +76,7 @@ class ReleaseExplanation(BaseModel):
     risk_level: str
     recommended_action: str
 
-structured_model = model.with_structured_output(ReleaseExplanation)
+
 
 def generate_explanation(state: ReleaseState):
     evidence = state["release_evidence"]
@@ -100,6 +106,7 @@ def generate_explanation(state: ReleaseState):
     Keep the recommended action concise.
     """
 
+    structured_model = get_structured_model()
     response = structured_model.invoke(prompt)
 
     return {
