@@ -1,6 +1,6 @@
 # ReleaseGuard AI
 
-ReleaseGuard AI is a software release risk assessment project built with Python, LangGraph, OpenAI, FastAPI, Streamlit, GitHub API, pytest and GitHub Actions.
+ReleaseGuard AI is a software release risk assessment project that uses live GitHub data, deterministic release rules and AI-assisted review.
 
 It uses live GitHub issue data and the latest CI result to assess whether a release should be:
 
@@ -10,7 +10,7 @@ It uses live GitHub issue data and the latest CI result to assess whether a rele
 
 The release decision itself is made using deterministic Python rules. The LLM is used to explain the decision, review the explanation for consistency, and revise it when needed.
 
-<img width="442" height="573" alt="image" src="https://github.com/user-attachments/assets/91c76e84-9f81-470b-9710-1e7b10a84066" />
+<img width="700" height="907" alt="image" src="https://github.com/user-attachments/assets/91c76e84-9f81-470b-9710-1e7b10a84066" />
 
 ## How it works
 
@@ -55,6 +55,7 @@ AI Review
    ↓
 Revision / Human Review if needed
 ```
+### Human review example
 <img width="540" height="340" alt="image" src="https://github.com/user-attachments/assets/af6a829d-9b59-4863-bbdd-30a2cb6857e8" />
 
 ## Tech stack
@@ -101,6 +102,9 @@ streamlit run streamlit_app.py
 Then open the Streamlit URL shown in the terminal and click **Assess Release**.
 
 ## Tests and CI
+```bash
+python -m pytest
+```
 
 GitHub Actions runs the pytest suite automatically on pushes and pull requests.
 
