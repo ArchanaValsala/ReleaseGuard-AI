@@ -3,3 +3,6 @@ requests
 python-dotenv
 langgraph
 langchain-openai
+fastapi
+uvicorn
+streamlit

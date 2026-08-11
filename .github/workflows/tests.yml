@@ -1,24 +1,80 @@
+# -------------------------------------------------------------------
+# RELEASEGUARD AI - CONTINUOUS INTEGRATION
+# -------------------------------------------------------------------
+
+# Name shown for this workflow in the GitHub Actions tab.
 name: Run Tests
 
+
+# -------------------------------------------------------------------
+# WHEN THE WORKFLOW SHOULD RUN
+# -------------------------------------------------------------------
+
+# Run the test suite whenever:
+# - code is pushed to the repository
+# - a pull request is opened or updated
+#
+# This helps catch broken code before changes are merged.
 on:
   push:
   pull_request:
 
+
+# -------------------------------------------------------------------
+# CI JOBS
+# -------------------------------------------------------------------
+
 jobs:
   test:
+
+    # Use a fresh Ubuntu virtual machine provided by GitHub Actions.
     runs-on: ubuntu-latest
 
     steps:
+
+      # ---------------------------------------------------------------
+      # STEP 1: CHECK OUT THE REPOSITORY
+      # ---------------------------------------------------------------
+
+      # Download the repository code into the GitHub Actions runner
+      # so the following steps can access and test it.
       - name: Checkout code
         uses: actions/checkout@v4
 
+
+      # ---------------------------------------------------------------
+      # STEP 2: SET UP PYTHON
+      # ---------------------------------------------------------------
+
+      # Install the Python version used by this project.
+      #
+      # Keeping the CI Python version explicit makes test execution
+      # more predictable across different environments.
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+
+      # ---------------------------------------------------------------
+      # STEP 3: INSTALL PROJECT DEPENDENCIES
+      # ---------------------------------------------------------------
+
+      # Install the same packages listed in requirements.txt.
+      #
+      # This creates a clean CI environment similar to setting up
+      # the project from scratch on another machine.
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+
+      # ---------------------------------------------------------------
+      # STEP 4: RUN AUTOMATED TESTS
+      # ---------------------------------------------------------------
+
+      # Run the full pytest suite.
+      #
+      # If any test fails, this command exits with an error and
+      # GitHub Actions marks the workflow/job as failed.
       - name: Run tests
         run: python -m pytest
